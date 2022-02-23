@@ -1,0 +1,29 @@
+{
+  "name": "cordova-plugin-mobile-login",
+  "version": "1.0.0",
+  "description": "cordova 插件, 手机号码一键登录,集成阿里云的SDK",
+  "cordova": {
+    "id": "cordova-plugin-mobile-login",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-plugin-mobile-login",
+    "float",
+    "window"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "author": "",
+  "license": "ISC"
+}
