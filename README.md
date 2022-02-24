@@ -17,7 +17,10 @@ ionic cordova plugin add https://github.com/lounai-chen/cordova-plugin-mobile-lo
     }
 ``` 
 
-2. 
+2. 如果没自动添加成功activity,需要在 AndroidManifest.xml 手动加入
 ``` 
- 
+<activity android:name="com.aliqin.mytel.login.OneKeyLoginActivity" />
+<activity android:configChanges="orientation|keyboardHidden|screenSize" android:exported="false" android:launchMode="singleTop" android:name="com.mobile.auth.gatewayauth.LoginAuthActivity" android:theme="@style/authsdk_activity_dialog" />
+<activity android:configChanges="orientation|keyboardHidden|screenSize" android:exported="false" android:launchMode="singleTop" android:name="com.mobile.auth.gatewayauth.activity.AuthWebVeiwActivity" android:screenOrientation="behind" />
+<activity android:configChanges="orientation|keyboardHidden|screenSize" android:exported="false" android:launchMode="singleTop" android:name="com.cmic.sso.sdk.activity.LoginAuthActivity" />
 ``` 
