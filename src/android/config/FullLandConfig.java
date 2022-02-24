@@ -6,12 +6,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 
-import com.aliqin.mytel.R;
+import com.zhongzilian.chestnutapp.R;
 import com.mobile.auth.gatewayauth.AuthRegisterXmlConfig;
 import com.mobile.auth.gatewayauth.AuthUIConfig;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.ui.AbstractPnsViewDelegate;
 
+//全屏横屏样式
 public class FullLandConfig extends BaseUIConfig {
 
     private int mOldScreenOrientation;
@@ -25,20 +26,20 @@ public class FullLandConfig extends BaseUIConfig {
         mAuthHelper.removeAuthRegisterXmlConfig();
         mAuthHelper.removeAuthRegisterViewConfig();
 
-        mAuthHelper.addAuthRegisterXmlConfig(new AuthRegisterXmlConfig.Builder()
-                .setLayout(R.layout.custom_port_dialog_action_bar, new AbstractPnsViewDelegate() {
-                    @Override
-                    public void onViewCreated(View view) {
-                        findViewById(R.id.tv_title).setVisibility(View.GONE);
-                        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mAuthHelper.quitLoginPage();
-                            }
-                        });
-                    }
-                })
-                .build());
+//        mAuthHelper.addAuthRegisterXmlConfig(new AuthRegisterXmlConfig.Builder()
+//                .setLayout(R.layout.custom_port_dialog_action_bar, new AbstractPnsViewDelegate() {
+//                    @Override
+//                    public void onViewCreated(View view) {
+//                        findViewById(R.id.tv_title).setVisibility(View.GONE);
+//                        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                mAuthHelper.quitLoginPage();
+//                            }
+//                        });
+//                    }
+//                })
+//                .build());
         int authPageOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         if (Build.VERSION.SDK_INT == 26) {
             mOldScreenOrientation = mActivity.getRequestedOrientation();

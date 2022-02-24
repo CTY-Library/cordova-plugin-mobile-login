@@ -5,14 +5,16 @@ var MobileLoginPlugin = {
         success,
         error        
     ) {
-        exec(success, error, 'MobileLoginPlugin', 'onekey_init', ['']);
+       exec(success, error, 'MobileLoginPlugin', 'onekey_init', ['']); 
     },
     onekey_login: function(
         success,
         error        
     ) {
-        exec(success, error, 'MobileLoginPlugin', 'onekey_login', ['']);
-    } 
+        cordova.require('cordova/channel').onCordovaReady.subscribe(function(){
+            exec(success, error, 'MobileLoginPlugin', 'onekey_login', ['']);
+        });
+    }
 }
 
 module.exports = MobileLoginPlugin

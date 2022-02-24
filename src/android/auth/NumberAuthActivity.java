@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.aliqin.mytel.R;
+import com.zhongzilian.chestnutapp.R;
 import com.aliqin.mytel.uitls.ExecutorManager;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.PreLoginResultListener;

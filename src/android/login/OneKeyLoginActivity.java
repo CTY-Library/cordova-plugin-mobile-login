@@ -2,25 +2,27 @@ package com.aliqin.mytel.login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import android.util.Log;
-import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aliqin.mytel.BuildConfig;
-import com.aliqin.mytel.MessageActivity;
-import com.aliqin.mytel.R;
+//import com.aliqin.mytel.MessageActivity;
+import com.aliqin.mytel.MobileLoginPlugin;
+import com.zhongzilian.chestnutapp.BuildConfig;
+import com.zhongzilian.chestnutapp.R;
 import com.aliqin.mytel.config.BaseUIConfig;
 import com.aliqin.mytel.uitls.ExecutorManager;
-import com.mobile.auth.gatewayauth.AuthUIConfig;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.ResultCode;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 import com.mobile.auth.gatewayauth.model.TokenRet;
+
+import org.apache.cordova.CordovaActivity;
 
 import static com.aliqin.mytel.Constant.THEME_KEY;
 import static com.aliqin.mytel.uitls.MockRequest.getPhoneNumber;
@@ -28,7 +30,7 @@ import static com.aliqin.mytel.uitls.MockRequest.getPhoneNumber;
 /**
  * 进app直接登录的场景
  */
-public class OneKeyLoginActivity extends Activity {
+public class OneKeyLoginActivity extends CordovaActivity {
     private static final String TAG = OneKeyLoginActivity.class.getSimpleName();
 
     private TextView mTvResult;
@@ -37,19 +39,25 @@ public class OneKeyLoginActivity extends Activity {
     private ProgressDialog mProgressDialog;
     private int mUIType;
     private BaseUIConfig mUIConfig;
+
+    public static Context _this_context;
+    public static Activity _this_activity;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUIType = getIntent().getIntExtra(THEME_KEY, -1);
         setContentView(R.layout.activity_login);
-        mTvResult = findViewById(R.id.tv_result);
-        sdkInit(BuildConfig.AUTH_SECRET);
-        mUIConfig = BaseUIConfig.init(mUIType, this, mPhoneNumberAuthHelper);
-        oneKeyLogin();
+        //mTvResult = findViewById(R.id.tv_result);
+         sdkInit();
+       mUIConfig = BaseUIConfig.init(mUIType, this, mPhoneNumberAuthHelper);
+       oneKeyLogin();
     }
 
 
-    public void sdkInit(String secretInfo) {
+    public  void sdkInit() {
+      String secretInfo = MobileLoginPlugin.mySECRET_KEY;// BuildConfig.AUTH_SECRET;
+
         mTokenResultListener = new TokenResultListener() {
             @Override
             public void onTokenSuccess(String s) {
@@ -82,9 +90,10 @@ public class OneKeyLoginActivity extends Activity {
                         //模拟的是必须登录 否则直接退出app的场景
                         finish();
                     } else {
-                        Toast.makeText(getApplicationContext(), "一键登录失败切换到其他登录方式", Toast.LENGTH_SHORT).show();
-                        Intent pIntent = new Intent(OneKeyLoginActivity.this, MessageActivity.class);
-                        startActivityForResult(pIntent, 1002);
+                        MobileLoginPlugin.callJS("0|一键登录失败切换到其他登录方式"); //主动回调cordova,返回JS
+                        //Toast.makeText(getApplicationContext(), "一键登录失败切换到其他登录方式", Toast.LENGTH_SHORT).show();
+                        //Intent pIntent = new Intent(OneKeyLoginActivity.this, MessageActivity.class);
+                        //startActivityForResult(pIntent, 1002);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -95,13 +104,15 @@ public class OneKeyLoginActivity extends Activity {
         mPhoneNumberAuthHelper = PhoneNumberAuthHelper.getInstance(this, mTokenResultListener);
         mPhoneNumberAuthHelper.getReporter().setLoggerEnable(true);
         mPhoneNumberAuthHelper.setAuthSDKInfo(secretInfo);
+
+
     }
 
     /**
      * 进入app就需要登录的场景使用
      */
     private void oneKeyLogin() {
-        mPhoneNumberAuthHelper = PhoneNumberAuthHelper.getInstance(getApplicationContext(), mTokenResultListener);
+        mPhoneNumberAuthHelper = PhoneNumberAuthHelper.getInstance(getApplicationContext(), mTokenResultListener); // getApplicationContext()
         mPhoneNumberAuthHelper.checkEnvAvailable();
         mUIConfig.configAuthPage();
         getLoginToken(5000);
@@ -125,13 +136,32 @@ public class OneKeyLoginActivity extends Activity {
                 OneKeyLoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mTvResult.setText("登陆成功：" + result);
+                       // mTvResult.setText("登陆成功：" + result);
                         mPhoneNumberAuthHelper.quitLoginPage();
                     }
                 });
+                MobileLoginPlugin.callJS(result); //主动回调cordova,返回JS
+                onBackPressed();
             }
         });
     }
+
+  //调用onBackPressed()方法，点击返回键返回数据给上一个Activity
+  public   void onBackPressed() {
+    //还是新建一个Intent,只是此时Intent只是作为传递数据使用，并没有其他的意图
+    Intent intent = new Intent();
+    //需要返回的数据
+    String data = "";
+    //在intent当中调用putExtra()方法来把数据返回
+    intent.putExtra("data",data);
+    //setResult()方法是返回数据时必须要使用到的额，这里需要两个参数
+    //一个参数来和getStringExtra()方法当中的参数项对应
+    //后一个参数和当前Activity中的数据data对应
+    setResult(2,intent);
+    //返回数据后结束当前活动
+    finish();
+  }
+
 
 
 
@@ -140,7 +170,7 @@ public class OneKeyLoginActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1002) {
             if (resultCode == 1) {
-                mTvResult.setText("登陆成功：" + data.getStringExtra("result"));
+               // mTvResult.setText("登陆成功：" + data.getStringExtra("result"));
             } else {
                 //模拟的是必须登录 否则直接退出app的场景
                 finish();
