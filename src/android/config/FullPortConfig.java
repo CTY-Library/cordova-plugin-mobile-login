@@ -109,9 +109,9 @@ public class FullPortConfig extends BaseUIConfig {
                 //隐藏默认Toast
                 .setLogBtnToastHidden(true)
                 //沉浸式状态栏
-                .setNavColor(Color.parseColor("#026ED2"))
-                .setStatusBarColor(Color.parseColor("#026ED2"))
-                .setWebViewStatusBarColor(Color.parseColor("#026ED2"))
+                .setNavColor(Color.parseColor("#01AD4A"))
+                .setStatusBarColor(Color.parseColor("#01AD4A"))
+                .setWebViewStatusBarColor(Color.parseColor("#01AD4A"))
 
                 .setLightColor(false)
                 .setWebNavTextSizeDp(20)
@@ -120,10 +120,10 @@ public class FullPortConfig extends BaseUIConfig {
                 .setAuthPageActOut("in_activity", "out_activity")
                 .setVendorPrivacyPrefix("《")
                 .setVendorPrivacySuffix("》")
-                .setPageBackgroundPath("page_background_color")
+                //.setPageBackgroundPath("page_background_color")
                 .setLogoImgPath("mytel_app_launcher")
                 //一键登录按钮三种状态背景示例login_btn_bg.xml
-                .setLogBtnBackgroundPath("login_btn_bg")
+                //.setLogBtnBackgroundPath("login_btn_bg1")
                 .setScreenOrientation(authPageOrientation)
                 .create());
     }
