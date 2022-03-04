@@ -4,7 +4,11 @@ cordova 插件, 手机号码一键登录, 集成阿里云的SDK
 ionic cordova plugin add https://github.com/lounai-chen/cordova-plugin-mobile-login --variable LOGINSECRETKEY=xxxx --variable  LOGINPRIVACTWEB=http://xxx
 ``` 
 LOGINSECRETKEY 是安卓的密钥 
+
 LOGINPRIVACTWEB 隐私政策的网站 
+
+ 
+ 
 
 
 
@@ -41,7 +45,9 @@ LOGINPRIVACTWEB 隐私政策的网站
 
 
 3 阿里云的参考链接 
-https://help.aliyun.com/document_detail/144231.html
-https://help.aliyun.com/document_detail/144186.html
+
+https://help.aliyun.com/document_detail/144231.html 
+
+https://help.aliyun.com/document_detail/144186.html 
 
 
