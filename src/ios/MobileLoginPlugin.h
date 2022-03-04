@@ -9,7 +9,7 @@
 
 @interface MobileLoginPlugin : UIViewController
  
-   - (void) sendCmd : (NSString *)video_times;
+   - (void) sendCmd : (NSString *)msg;
 
 @end
 

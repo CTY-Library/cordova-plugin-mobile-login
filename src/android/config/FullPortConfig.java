@@ -104,6 +104,7 @@ public class FullPortConfig extends BaseUIConfig {
                 .setAppPrivacyOne("《隐私协议》", MobileLoginPlugin.myPrivacy_Web )
                 //.setAppPrivacyTwo("《百度》", "https://www.baidu.com")
                 .setAppPrivacyColor(Color.GRAY, Color.parseColor("#002E00"))
+
                 //隐藏默认切换其他登录方式
                 .setSwitchAccHidden(true)
                 //隐藏默认Toast
@@ -123,7 +124,7 @@ public class FullPortConfig extends BaseUIConfig {
                 //.setPageBackgroundPath("page_background_color")
                 .setLogoImgPath("mytel_app_launcher")
                 //一键登录按钮三种状态背景示例login_btn_bg.xml
-                //.setLogBtnBackgroundPath("login_btn_bg1")
+                .setLogBtnBackgroundPath("login_btn_bg")
                 .setScreenOrientation(authPageOrientation)
                 .create());
     }

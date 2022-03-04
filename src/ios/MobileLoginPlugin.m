@@ -6,24 +6,17 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCrypto.h>
  
- 
-  
+
 #import <ATAuthSDK/ATAuthSDK.h>
 #import <PNSNetDetect/PNSNetDetect.h>
 #import <YTXMonitor/YTXMonitor.h>
 #import <YTXOperators/YTXOperators.h>
-
-#import "PNSMainController.h"
-#import "PNSBaseNavigationController.h"
-#import "PNSDelayLoginController.h"
-#import "PNSHttpsManager.h"
-#import "PNSSmsLoginController.h"
+ 
 
 @interface MobileLoginPlugin : CDVPlugin {
-    NSString *urlString; 
+    NSString *webUrlString;
 } 
-@property (nonatomic, assign) PNSBuildModelStyle style;
-
+ 
 - (void)onekey_init:(CDVInvokedUrlCommand*)command;
 - (void)onekey_login:(CDVInvokedUrlCommand*)command;
 
@@ -36,41 +29,46 @@ static CDVPluginResult *pluginResult = nil;
 static MobileLoginPlugin *selfplugin = nil;
 
 - (void)pluginInitialize {
- 
+    CDVViewController *viewController = (CDVViewController *)self.viewController;
+    webUrlString = [viewController.settings objectForKey:@"loginprivactweb"];//获取插件的 LOGINPRIVACTWEB
+   
 }
 
 - (void)onekey_init:(CDVInvokedUrlCommand *)command
 {
     selfplugin = self;
     myAsyncCallBackId = command.callbackId;
-//    
-//    /**
-//     *  设置 ATAuthSDK 的秘钥信息
-//     *  建议该信息维护在自己服务器端
-//     *  放在程序入口处调用效果最佳
-//     *
-//     *  1. 首先会从本地沙盒中找
-//     *  2. 沙盒找不到使用本地最初的秘钥进行初始化
-//     *  3. 同时发送异步请求从服务端拉取最新秘钥，拉取成功更新到本地沙盒中
-//     */
-//    NSString *app_page_name = @"com.xxx";
+//    以下代码建议搬迁到 appDelegate.m
+    
+    
+    /**
+     *  设置 ATAuthSDK 的秘钥信息
+     *  建议该信息维护在自己服务器端
+     *  放在程序入口处调用效果最佳
+     *
+     *  1. 首先会从本地沙盒中找
+     *  2. 沙盒找不到使用本地最初的秘钥进行初始化
+     *  3. 同时发送异步请求从服务端拉取最新秘钥，拉取成功更新到本地沙盒中
+     *
+     *
+     #import <ATAuthSDK/ATAuthSDK.h>
+     #import <PNSNetDetect/PNSNetDetect.h>
+     #import <YTXMonitor/YTXMonitor.h>
+     #import <YTXOperators/YTXOperators.h> 
+     *
+     */
+//    NSString *app_page_name = @"com.xxx.xxxx";
 //    NSString *authSDKInfo = [[NSUserDefaults standardUserDefaults] objectForKey: app_page_name];
 //    if (!authSDKInfo || authSDKInfo.length == 0) {
-//        authSDKInfo = @"xxx";
+//        authSDKInfo = @"xxxxxxxxxxxxxxxxxxxxxxxxx";
 //    }
-//    [PNSHttpsManager requestATAuthSDKInfo:^(BOOL isSuccess, NSString * _Nonnull authSDKInfo) {
-//        if (isSuccess) {
-//            [[NSUserDefaults standardUserDefaults] setObject:authSDKInfo forKey: app_page_name];
-//        }
-//    }];
-//    
-//  
+//
 //    [[TXCommonHandler sharedInstance] setAuthSDKInfo:authSDKInfo
 //                                            complete:^(NSDictionary * _Nonnull resultDic) {
-//        NSLog(@"设置秘钥结果：%@", resultDic);
+//        //NSLog(@"设置秘钥结果：%@", resultDic);
 //    }];
-//    
-//   
+    
+
     
     pluginResult = [CDVPluginResult resultWithStatus: CDVCommandStatus_NO_RESULT];
     [pluginResult setKeepCallbackAsBool:YES];
@@ -83,99 +81,124 @@ static MobileLoginPlugin *selfplugin = nil;
     selfplugin = self;
     myAsyncCallBackId = command.callbackId;
     
-   // PNSDelayLoginController *controller_login = [[PNSDelayLoginController alloc] init];
-    //PNSBaseNavigationController *navigationController = [[PNSBaseNavigationController alloc] initWithRootViewController:controller_login];
-
-//    UIWindow *_window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-//    //创建uiview对象
-//    UIView *_playerView = [[UIView alloc] init];
-//
-//    _window.rootViewController = navigationController;
-//    [_window addSubview:_playerView];
-//
-//    [_window makeKeyAndVisible];
-
-    
-    
-   // self.viewController = navigationController;
-    //[self.viewController.init : navigationController];
-    
-    [self initOneKeyLoginBtn];
-    
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"-1" ];
-    [pluginResult setKeepCallbackAsBool:YES]; //将 CDVPluginResult.keepCallback 设置为 true ,则不会销毁callback
-    [self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId];
- 
-    
+    [self initOneKeyLoginBtn]; 
 }
  
 
 - (void) initOneKeyLoginBtn {
-    //if (self.isCanUseOneKeyLogin == NO) {
-       // MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-       // hud.mode = MBProgressHUDModeText;
-       // hud.label.text = @"当前环境不支持一键登录";
-        //[hud hideAnimated:YES afterDelay:2.0];
-    //} else {
-        //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    PNSDelayLoginController *controller_login = [[PNSDelayLoginController alloc] init];
  
-        TXCustomModel *model = [PNSBuildModelUtils buildModelWithStyle:self.style
-                                                          button1Title:@"短信登录"
-                                                               target1:controller_login
-                                                             selector1:@selector(gotoSmsControllerAndShowNavBar)
-                                                          button2Title:@"短信登录（隐藏系统导航栏）"
-                                                               target2:self
-                                                             selector2:@selector(gotoSmsControllerAndHiddenNavBar)];
+    [[TXCommonHandler sharedInstance] cancelLoginVCAnimated:YES complete:nil]; //关闭授权页面
+    
+    //自定义拉起授权页面
+    TXCustomModel *model = [[TXCustomModel alloc] init];
+        model.navColor = UIColor.systemGreenColor;
+        model.navTitle = [[NSAttributedString alloc] initWithString:@"一键登录"attributes:@{NSForegroundColorAttributeName : UIColor.whiteColor,NSFontAttributeName : [UIFont systemFontOfSize:20.0]}];
+       //选中后的颜色
+       model.loginBtnBgImgs = @[[UIImage imageNamed:@"login_btn_normal"],[UIImage imageNamed:@"login_btn_unable"],[UIImage imageNamed:@"login_btn_press"]];
+        //model.navIsHidden = NO;
+        model.navBackImage = [UIImage imageNamed:@"icon_nav_back_light"];
+        //model.hideNavBackItem = NO;
+        //UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        //[rightBtn setTitle:@"更多" forState:UIControlStateNormal];
+        //model.navMoreView = rightBtn;
+        model.privacyNavColor = UIColor.blackColor;
+        model.privacyNavBackImage = [UIImage imageNamed:@"icon_nav_back_light"];
+        model.privacyNavTitleFont = [UIFont systemFontOfSize:20.0];
+        model.privacyNavTitleColor = UIColor.whiteColor;
+        model.logoImage = [UIImage imageNamed:@"AppIcon"];
+        //model.logoIsHidden = NO;
+        //model.sloganIsHidden = NO;
+    //一键登录slogan文案
+        model.sloganText = [[NSAttributedString alloc] initWithString:@"学习是一种时尚"attributes:@{NSForegroundColorAttributeName : UIColor.grayColor,NSFontAttributeName : [UIFont systemFontOfSize:16.0]}];
+        model.numberColor = UIColor.blackColor;
+        model.numberFont = [UIFont systemFontOfSize:30.0];
+        model.loginBtnText = [[NSAttributedString alloc] initWithString:@"一键登录"attributes:@{  NSForegroundColorAttributeName : UIColor.whiteColor,NSFontAttributeName : [UIFont systemFontOfSize:20.0]}];
         
-       // __weak typeof(self) weakSelf = self;
+        //model.autoHideLoginLoading = NO;
+        if(webUrlString  != nil){
+            model.privacyOne = @[@"《隐私政策》",webUrlString];
+        }
+    
+        //model.privacyTwo = @[@"《隐私2》",@"https://www.taobao.com/"];
+        model.privacyColors = @[UIColor.lightGrayColor,UIColor.blackColor];
+        model.privacyAlignment = NSTextAlignmentCenter;
+        model.privacyFont = [UIFont fontWithName:@"PingFangSC-Regular" size:13.0];
+        model.privacyOperatorPreText = @"《";
+        model.privacyOperatorSufText = @"》";
+        //model.checkBoxIsHidden = NO;
+        model.checkBoxWH = 17.0;
+        //model.changeBtnTitle = [[NSAttributedString alloc] initWithString:@"短信登录"attributes:@{NSForegroundColorAttributeName : UIColor.orangeColor,NSFontAttributeName : [UIFont systemFontOfSize:18.0]}];
+        model.changeBtnIsHidden = YES;
+        model.prefersStatusBarHidden = NO;
+        model.preferredStatusBarStyle = UIStatusBarStyleLightContent;
+        model.presentDirection = PNSPresentationDirectionBottom;
+    
+        //添加自定义控件并对自定义控件进行布局
+        __block UIButton *customBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [customBtn setTitle:@"切换到短信登录页面" forState:UIControlStateNormal];
+        //[customBtn setBackgroundColor:UIColor.redColor];
+        [customBtn setTitleColor:UIColor.blackColor forState:UIControlStateNormal ];
+        customBtn.titleLabel.font = [UIFont systemFontOfSize: 14];
+        //设置点击事件
+        [customBtn addTarget:self action:@selector(msgButtonClick) forControlEvents:UIControlEventTouchUpInside];
+        customBtn.frame = CGRectMake(0, 0, 230, 40);
+        model.customViewBlock = ^(UIView * _Nonnull superCustomView) {
+             [superCustomView addSubview:customBtn];
+        };
+        model.customViewLayoutBlock = ^(CGSize screenSize,CGRect contentViewFrame,CGRect navFrame,CGRect titleBarFrame,CGRect logoFrame, CGRect sloganFrame, CGRect numberFrame, CGRect loginFrame, CGRect changeBtnFrame, CGRect privacyFrame) {
+            CGRect frame = customBtn.frame;
+            frame.origin.x = (contentViewFrame.size.width - frame.size.width) * 0.5;
+            frame.origin.y = CGRectGetMinY(privacyFrame) / 1.7;// - frame.size.height ;
+            frame.size.width = contentViewFrame.size.width - frame.origin.x * 2;
+            customBtn.frame = frame;
+        };
+    
+        
+       
+        // sdk
         [[TXCommonHandler sharedInstance] getLoginTokenWithTimeout:3.0
                                                         controller:self.viewController
                                                              model:model
                                                           complete:^(NSDictionary * _Nonnull resultDic) {
-            NSString *resultCode = [resultDic objectForKey:@"resultCode"];
+            NSString *resultCode = (NSString *)[resultDic objectForKey:@"resultCode"];
             if ([PNSCodeLoginControllerPresentSuccess isEqualToString:resultCode]) {
-                NSLog(@"授权页拉起成功回调：%@", resultDic);
+                // NSLog(@"授权页拉起成功回调：%@", resultDic);
                // [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
             } else if ([PNSCodeLoginControllerClickCancel isEqualToString:resultCode] ||
                        [PNSCodeLoginControllerClickChangeBtn isEqualToString:resultCode] ||
                        [PNSCodeLoginControllerClickLoginBtn isEqualToString:resultCode] ||
                        [PNSCodeLoginControllerClickCheckBoxBtn isEqualToString:resultCode] ||
                        [PNSCodeLoginControllerClickProtocol isEqualToString:resultCode]) {
-                NSLog(@"页面点击事件回调：%@", resultDic);
+               // NSLog(@"页面点击事件回调：%@", resultDic);
             } else if ([PNSCodeSuccess isEqualToString:resultCode]) {
-                NSLog(@"获取LoginToken成功回调：%@", resultDic);
+                //NSLog(@"获取LoginToken成功回调：%@", resultDic);
                 //NSString *token = [resultDic objectForKey:@"token"];
-                NSLog(@"接下来可以拿着Token去服务端换取手机号，有了手机号就可以登录，SDK提供服务到此结束");
+                //NSLog(@"接下来可以拿着Token去服务端换取手机号，有了手机号就可以登录，SDK提供服务到此结束");
                 //[weakSelf dismissViewControllerAnimated:YES completion:nil];
+               
+                NSString *token = (NSString *) [resultDic objectForKey:@"token"];
+                //NSLog(@"获取token成功回调：%@", token);
+                NSString *json_token = [NSString stringWithFormat:@"%@%@%@",@"{\"token\":\"",token,@"\"}"];
+                [self sendCmd:  json_token];
+                
                 [[TXCommonHandler sharedInstance] cancelLoginVCAnimated:YES complete:nil];
             } else {
-                NSLog(@"获取LoginToken或拉起授权页失败回调：%@", resultDic);
-                //[MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                //失败后可以跳转到短信登录界面
-//                PNSSmsLoginController *controller = [[PNSSmsLoginController alloc] init];
-//                controller.isHiddenNavgationBar = NO;
-//                UINavigationController *navigationController = self.navigationController;
-//                if (self.presentedViewController) {
-//                    //如果授权页成功拉起，这个时候则需要使用授权页的导航控制器进行跳转
-//                    navigationController = (UINavigationController *)self.presentedViewController;
-//                }
-                //[navigationController pushViewController:controller animated:YES];
+                //NSLog(@"获取LoginToken或拉起授权页失败回调：%@", resultDic);
+                [[TXCommonHandler sharedInstance] cancelLoginVCAnimated:YES complete:nil];
+                [self sendCmd:  @"0|一键登录失败切换到其他登录方式"];
+  
             }
         }];
     //}
 }
 
--  (void)   goMsgPage
-{
- 
-}
 
--  (void)  sendCmd : (NSString *)video_times
+
+-  (void)  sendCmd : (NSString *)msg
 {
     if(myAsyncCallBackId != nil)
     {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: video_times ];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: msg ];
         //将 CDVPluginResult.keepCallback 设置为 true ,则不会销毁callback
         [pluginResult  setKeepCallbackAsBool:YES];
         [selfplugin.commandDelegate sendPluginResult:pluginResult callbackId: myAsyncCallBackId];
@@ -183,6 +206,11 @@ static MobileLoginPlugin *selfplugin = nil;
     }
 }
  
+
+-(void)msgButtonClick{
+    [[TXCommonHandler sharedInstance] cancelLoginVCAnimated:YES complete:nil];
+    [self sendCmd:  @"1|切换到短信登录方式"];
+}
  
 @end
 

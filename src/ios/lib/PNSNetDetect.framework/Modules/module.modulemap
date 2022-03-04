@@ -1,0 +1,6 @@
+framework module PNSNetDetect {
+  umbrella header "PNSNetDetect.h"
+
+  export *
+  module * { export * }
+}
