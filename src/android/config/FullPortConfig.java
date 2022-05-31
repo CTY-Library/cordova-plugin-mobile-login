@@ -104,7 +104,6 @@ public class FullPortConfig extends BaseUIConfig {
                 .setAppPrivacyOne("《隐私协议》", MobileLoginPlugin.myPrivacy_Web )
                 //.setAppPrivacyTwo("《百度》", "https://www.baidu.com")
                 .setAppPrivacyColor(Color.GRAY, Color.parseColor("#002E00"))
-
                 //隐藏默认切换其他登录方式
                 .setSwitchAccHidden(true)
                 //隐藏默认Toast

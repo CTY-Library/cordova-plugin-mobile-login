@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+//import android.support.annotation.RequiresApi;
+
+import androidx.annotation.RequiresApi;
 
 import com.aliqin.mytel.login.OneKeyLoginActivity;
 import com.aliqin.mytel.uitls.PermissionUtils;

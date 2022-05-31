@@ -5,13 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+//import android.support.annotation.Nullable;
 
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.aliqin.mytel.MessageActivity;
+import androidx.annotation.Nullable;
+
 import com.aliqin.mytel.MobileLoginPlugin;
 import com.zhongzilian.chestnutapp.BuildConfig;
 import com.zhongzilian.chestnutapp.R;

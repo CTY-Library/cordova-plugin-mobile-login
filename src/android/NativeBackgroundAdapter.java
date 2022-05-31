@@ -29,7 +29,7 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
@@ -40,6 +40,9 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+
+import androidx.annotation.NonNull;
+
 import com.mobile.auth.gatewayauth.LoginAuthActivity;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -336,7 +339,7 @@ public class NativeBackgroundAdapter {
             textureView.setSurfaceTextureListener(new SurfaceTextureListener() {
                 @Override
                 public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width,
-                    int height) {
+                                                      int height) {
                     Surface mSurface = new Surface(surface);
                     mediaPlayer[0].setSurface(mSurface);
                 }

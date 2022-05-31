@@ -3,7 +3,9 @@ package com.aliqin.mytel.uitls;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
-import android.support.v4.content.PermissionChecker;
+//import android.support.v4.content.PermissionChecker;
+
+import androidx.core.content.PermissionChecker;
 
 import java.util.ArrayList;
 import java.util.List;
