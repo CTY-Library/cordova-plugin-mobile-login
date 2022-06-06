@@ -84,6 +84,8 @@
     <source-file src="src/android/libs/logger-2.1.3.2-release.aar" target-dir="libs" />
     <source-file src="src/android/libs/main-2.1.3.2-release.aar" target-dir="libs" />
 
+    <framework src="src/android/gradle/aliMobleLogin.gradle" custom="true" type="gradleReference"/>
+
     <activity android:name="com.aliqin.mytel.login.OneKeyLoginActivity"></activity>
     <!-- 使用弹窗模式必须添加！！！ -->
     <activity
