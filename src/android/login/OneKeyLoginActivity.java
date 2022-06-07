@@ -32,7 +32,7 @@ import static com.aliqin.mytel.uitls.MockRequest.getPhoneNumber;
 /**
  * 进app直接登录的场景
  */
-public class OneKeyLoginActivity extends CordovaActivity {
+public class OneKeyLoginActivity extends Activity {
     private static final String TAG = OneKeyLoginActivity.class.getSimpleName();
 
     private TextView mTvResult;
