@@ -81,7 +81,12 @@ public class NativeBackgroundAdapter {
                 mExecutorService.execute(new Runnable() {
                     @Override
                     public void run() {
-                        Bitmap bitmap = getAssetVideoCoverBitmap(context.getAssets(), path);
+                         Bitmap bitmap = null;
+                        try{
+                            bitmap = getAssetVideoCoverBitmap(context.getAssets(), path);
+                        } catch(IOException e){
+                            throw new RuntimeException(e);
+                        }
                         if(null!=bitmap) {
                             mCacheManage.cacheBitmap(path, bitmap);
                         }
@@ -166,7 +171,7 @@ public class NativeBackgroundAdapter {
      * @param videoPath
      * @return
      */
-    public static Bitmap getAssetVideoCoverBitmap(AssetManager assetManager, String videoPath) {
+    public static Bitmap getAssetVideoCoverBitmap(AssetManager assetManager, String videoPath) throws IOException {
         Bitmap bitmap = null;
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
